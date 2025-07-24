@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: invest_db
+      POSTGRES_USER: investuser
+      POSTGRES_PASSWORD: investpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/investdb
+      SPRING_DATASOURCE_USERNAME: investuser
+      SPRING_DATASOURCE_PASSWORD: investpass
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:
